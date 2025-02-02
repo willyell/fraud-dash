@@ -32,9 +32,9 @@ export default function App() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <a href="https://yourwebsite.com" target="_blank">
+        <a href="https://xone.digital" target="_blank">
           <img 
-            src="https://media-content-storage.b-cdn.net/xone/web-assets/Xone_Logo%20RGB-04.png" 
+            src="https://media-content-storage.b-cdn.net/xone/web-assets/Xone_Logo%20RGB-03.png" 
             className="logo" 
             alt="Xone Logo" 
           />
