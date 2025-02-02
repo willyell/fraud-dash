@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export default function App() {
-  const API_BASE = "https://wy-worker-fraud-api.will-086.workers.dev/";
+  const API_BASE = "https://wy-worker-fraud-api.will-086.workers.dev";
   const [logs, setLogs] = useState([]);
   const [flaggedIPs, setFlaggedIPs] = useState([]);
 
