@@ -15,17 +15,20 @@ export default function FraudDashboard() {
   }, []);
 
   const fetchLogs = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${API_BASE}/logs`);
-      const data = await response.json();
-      setLogs(data);
-    } catch (error) {
-      setError('Failed to fetch logs');
-    } finally {
-      setLoading(false);
+  try {
+    const response = await fetch(`${API_BASE}/logs`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch logs: ${response.statusText}`);
     }
-  };
+    const data = await response.json();
+    console.log('Logs fetched:', data);  // Check the fetched data
+    setLogs(data);
+  } catch (error) {
+    console.error('Error fetching logs:', error);
+    alert('Failed to fetch logs');
+  }
+};
+
 
   const fetchFlaggedIPs = async () => {
     try {
