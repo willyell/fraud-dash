@@ -1,41 +1,83 @@
-import { useState } from 'react'
-import FraudDashboard from './components/FraudDashboard'  // Import the FraudDashboard component
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [logs, setLogs] = useState([]);
+  const [flaggedIPs, setFlaggedIPs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch logs from Cloudflare Worker API
+    async function fetchLogs() {
+      try {
+        const response = await fetch("https://wy-worker-fraud-api.will-086.workers.dev/logs");
+        const data = await response.json();
+        setLogs(data);
+      } catch (error) {
+        console.error("Failed to fetch logs", error);
+      }
+    }
+
+    // Fetch flagged IPs from Cloudflare Worker API
+    async function fetchFlaggedIPs() {
+      try {
+        const response = await fetch("https://wy-worker-fraud-api.will-086.workers.dev/flagged");
+        const data = await response.json();
+        setFlaggedIPs(data);
+      } catch (error) {
+        console.error("Failed to fetch flagged IPs", error);
+      }
+    }
+
+    // Run both functions
+    Promise.all([fetchLogs(), fetchFlaggedIPs()]).finally(() => setLoading(false));
+  }, []);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
+      <div className="container">
+        <a href="https://xone.digital" target="_blank">
+          <img 
+            src="https://media-content-storage.b-cdn.net/xone/web-assets/Xone_Logo%20RGB-04.png" 
+            className="logo" 
+            alt="Xone Logo" 
+          />
         </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
+        <h1>Xone Fraud Dashboard</h1>
 
-      {/* Display the FraudDashboard */}
-      <FraudDashboard />
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            {/* Display Logs */}
+            <div className="card">
+              <h2>Logs</h2>
+              <ul>
+                {logs.length > 0 ? (
+                  logs.map((log, index) => <li key={index}>{JSON.stringify(log)}</li>)
+                ) : (
+                  <p>No logs available.</p>
+                )}
+              </ul>
+            </div>
 
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+            {/* Display Flagged IPs */}
+            <div className="card">
+              <h2>Flagged IPs</h2>
+              <ul>
+                {flaggedIPs.length > 0 ? (
+                  flaggedIPs.map((ip, index) => <li key={index}>{ip}</li>)
+                ) : (
+                  <p>No flagged IPs.</p>
+                )}
+              </ul>
+            </div>
+          </>
+        )}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
+
 
